@@ -5,7 +5,7 @@ import m from "mithril";
 export function exampleApexCharts() {
 
     return {
-        oninit: (vnode) => {
+        oncreate: (vnode) => {
             async function prepare() {
                 let dataJson = await fetch("./data.json").then((response) =>
                     response.json(),
@@ -33,7 +33,7 @@ export function exampleApexCharts() {
                     // },
                 };
 
-                let chart = new ApexCharts(vnode, options);
+                let chart = new ApexCharts(vnode.dom, options);
 
                 chart.render();
             }
