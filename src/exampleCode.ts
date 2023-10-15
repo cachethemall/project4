@@ -21,6 +21,9 @@ export function exampleApexCharts() {
                 var options = {
                     chart: {
                         type: "candlestick",
+                        animations: {
+                            enabled: false
+                        }
                     },
                     series: [
                         {
