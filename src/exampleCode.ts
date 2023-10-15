@@ -48,22 +48,24 @@ export function exampleApexCharts() {
 export function exampleLightWeightCharts() {
     let dataJson = null;
 
-    
+
     return {
-        oninit: (vnode) => {
-            async function prepare() {
-                let dataJson1 = await fetch("./data.json").then((response) =>
-                    response.json(),
-                );
-                dataJson1 = dataJson1.map((d) =>
-                    d.map((dd) => {
-                        dd.time += 25200;
-                        return dd;
-                    })
-                );
-                dataJson = (dataJson1);
-            }
-            prepare();
+        oncreate: async (vnode) => {
+            let dataJson1 = await fetch("./data.json").then((response) =>
+                response.json(),
+            );
+            dataJson1 = dataJson1.map((d) =>
+                d.map((dd) => {
+                    dd.time += 25200;
+                    return dd;
+                })
+            );
+            dataJson = (dataJson1);
+            m.redraw();
         },
-        view: (vnode) => m(ChartApp, { chartData: dataJson, textData: "abc" })};
+        view: (vnode) => {
+
+            return m(ChartApp, { chartData: dataJson, textData: "abc" });
+        }
+    };
 }

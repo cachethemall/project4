@@ -35,11 +35,11 @@ function TopLeftInfo(initialVnode) {
 
     return {
         view: (vnode) => {
-            m(
+            return m(
                 "div",
                 { class: "z-1 position-absolute p-1" },
                 m("dl", { class: "row" }, [
-                    m("dt", { class: "col" }, () => props?.currentBar?.symbol),
+                    m("dt", { class: "col" }, vnode.attrs?.currentBar?.symbol),
                     m("dd", { class: "col" }, ""),
                     // m("dt", { class: "col" }, "T"),
                     // m(
@@ -48,32 +48,36 @@ function TopLeftInfo(initialVnode) {
                     //   bar?.time != null ? timestampToDateString(bar?.time) : null
                     // ),
                     m("dt", { class: "col" }, "O"),
-                    m("dd", { class: "col" }, () => props?.currentBar?.open),
+                    m("dd", { class: "col" }, vnode.attrs?.currentBar?.open),
                     m("dt", { class: "col" }, "H"),
-                    m("dd", { class: "col" }, () => props?.currentBar?.high),
+                    m("dd", { class: "col" }, vnode.attrs?.currentBar?.high),
                     m("dt", { class: "col" }, "L"),
-                    m("dd", { class: "col" }, () => props?.currentBar?.low),
+                    m("dd", { class: "col" }, vnode.attrs?.currentBar?.low),
                     m("dt", { class: "col" }, "C"),
-                    m("dd", { class: "col" }, () => props?.currentBar?.close),
+                    m("dd", { class: "col" }, vnode.attrs?.currentBar?.close),
                     m("dt", { class: "col" }, "V"),
-                    m("dd", { class: "col" }, () => props?.currentBar?.volume),
+                    m("dd", { class: "col" }, vnode.attrs?.currentBar?.volume),
                 ]),
             );
         }
     };
 }
 
+export function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export function ChartApp(initialVnode) {
-    //  const appContainerRef = useRef(null);
-    let chartContainerRef;
     let currentBar: any = null;
     let mouseEventParamData: any = null;
+    let chart: any = null;
+    let candleStickData: Array<any> = [];
+    let volumeSeries: any = null;
+    let mainSeries: any = null;
 
-  
     return {
-        oninit: (vnode) => {
-            console.log(vnode.state.chartData[0][0]);
-            const candleStickData = vnode.state.chartData[0];
+        oncreate: (vnode) => {
+         
             const chartOptions = {
                 layout: {
                     textColor: "#d1d4dc",
@@ -92,10 +96,10 @@ export function ChartApp(initialVnode) {
                 //    borderVisible: false,
                 //},
             };
-    
-            const chart = createChart(chartContainerRef, chartOptions);
-    
-            const volumeSeries = chart.addHistogramSeries({
+
+            chart = createChart(vnode.dom.querySelector('#chartContainer'), chartOptions);
+
+            volumeSeries = chart.addHistogramSeries({
                 priceFormat: {
                     type: "volume",
                 },
@@ -108,36 +112,30 @@ export function ChartApp(initialVnode) {
                     bottom: 0.0,
                 },
             });
-    
-            volumeSeries.setData(
-                candleStickData.map((d) => ({
-                    time: d.time,
-                    value: d.volume,
-                    color: d.close >= d.open ? "#26a69a" : "#ef5350",
-                })),
-            );
-    
+
+            
+
             // Generate sample data to use within a candlestick series
-    
+
             // Create the Main Series (Candlesticks)
-            const mainSeries = chart.addCandlestickSeries();
+            mainSeries = chart.addCandlestickSeries();
             // Set the data for the Main Series
-            mainSeries.setData(candleStickData);
+            
             mainSeries.priceScale().applyOptions({
                 scaleMargins: {
                     top: 0.1, // highest point of the series will be 10% away from the top
                     bottom: 0.4, // lowest point will be 40% away from the bottom
                 },
             });
-    
+
             chart.resize(800, 600);
-    
+
             const timeScale = chart.timeScale();
             timeScale.applyOptions({
                 timeVisible: true,
                 secondsVisible: false,
             });
-    
+
             // Adding a window resize event handler to resize the chart when
             // the window size changes.
             // Note: for more advanced examples (when the chart doesn't fill the entire window)
@@ -145,14 +143,14 @@ export function ChartApp(initialVnode) {
             //window.addEventListener("resize", () => {
             //    chart.resize(window.innerWidth, window.innerHeight);
             //});
-    
-            currentBar = (candleStickData[candleStickData.length - 1]);
-    
+
+           
+
             const getLastBar = (series) => {
                 const lastIndex = series.dataByIndex(Math.Infinity, -1);
                 return series.dataByIndex(lastIndex);
             };
-    
+
             chart.subscribeCrosshairMove(function (mouseEventParam) {
                 const validCrosshairPoint = !(
                     mouseEventParam === undefined ||
@@ -163,13 +161,29 @@ export function ChartApp(initialVnode) {
                 const bar = validCrosshairPoint
                     ? candleStickData.find((d) => d.time === mouseEventParam.time)
                     : candleStickData.at(-1);
-    
+
                 currentBar = (bar);
                 mouseEventParamData = (mouseEventParam);
-                return () => {
-                    chart.remove();
-                };
+                m.redraw();
+
             });
+        },
+        onupdate: (vnode) => {
+            if (vnode.attrs.chartData === null) return;
+            console.log(vnode.attrs.chartData[0][0]);
+            candleStickData = vnode.attrs.chartData[0];
+            currentBar = (candleStickData[candleStickData.length - 1]);
+            volumeSeries?.setData(
+                candleStickData.map((d) => ({
+                    time: d.time,
+                    value: d.volume,
+                    color: d.close >= d.open ? "#26a69a" : "#ef5350",
+                })),
+            );
+            mainSeries?.setData(candleStickData);
+        },
+        onremove: (vnode) => {
+            chart?.remove();
         },
         view: (vnode) => {
             return m("div", { class: "container-fluid" }, [
@@ -184,7 +198,6 @@ export function ChartApp(initialVnode) {
                         m("div", {
                             id: "chartContainer",
                             class: "z-0 position-absolute",
-                            ref: (el) => chartContainerRef = el,
                         }),
                     ]),
                 ),
