@@ -1,20 +1,23 @@
 import m from "mithril";
 import { exampleApexCharts, exampleLightWeightCharts } from "./exampleCode";
+import { Comparision } from "./Comparision";
 
 export function EmptyDiv(): any {
     let count = 0;
-    return {view: () => m("div", [
-        m('button', {onclick: function() {count++}}, count + " clicks"),
-        m("p", "Count: " + count),
-    ])};
+    return {
+        view: () => m("div", [
+            m('button', { onclick: function () { count++ } }, count + " clicks"),
+            m("p", "Count: " + count),
+        ])
+    };
 }
 
 export function mainMenu() {
-    let chartElement2 = EmptyDiv;
+    let chartElement2 = Comparision;
     let chartLibs = {
         ApexCharts: exampleApexCharts,
         "Lightweight Charts": exampleLightWeightCharts,
-        Empty: EmptyDiv,
+        Comparision: Comparision,
     };
     return {
         view: () => {
@@ -24,6 +27,12 @@ export function mainMenu() {
                     { class: "navbar navbar-expand-sm bg-body-tertiary" },
                     m("div", { class: "container-fluid" }, [
                         m("a", { class: "navbar-brand", href: "#" }, "Chart"),
+                        //     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        //     <span class="navbar-toggler-icon"></span>
+                        //   </button>
+                        m('button.navbar-toggler[type=button][data-bs-toggle=collapse][data-bs-target=#navbarNav]',
+                            m('span.navbar-toggler-icon')
+                        ),
                         m(
                             "div",
                             { class: "collapse navbar-collapse", id: "navbarNav" },
