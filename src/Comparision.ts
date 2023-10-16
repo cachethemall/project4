@@ -99,6 +99,8 @@ function getFirstMatchGroup(readme: string, regexes: Array<RegExp>): string {
     return npmPackage;
 }
 
+
+
 async function updateComparisonList(choices: Array<IChoice>): Promise<Array<IGithubStat>> {
     return await Promise.all(choices.map(async (x) => {
         let json = await getGitHubStarForkWatch(x.github);
@@ -136,7 +138,8 @@ export function Comparision() {
             m.redraw();
         },
         view: (vnode) => {
-            let columns = Object.entries(jsUiFws[0]).map(x => {
+            let sampleObject = jsUiFws[0];
+            let columns = Object.entries(sampleObject).map(x => {
                 const [key] = x;
                 return key;
 
@@ -167,8 +170,29 @@ export function Comparision() {
                     m('tbody',
                         jsUiFws.map(x => m('tr',
                             columns.map(key => {
-                                return m('td.text', x[key]);
+                                let value = x[key];
+                                if (key === 'pushed_at') return m('td.text', new Date(value).toLocaleString());;
+                                if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
+                                    return m('td.text-center', displaySymbol(value));
+                                }
+                                if (_.isNumber(value))
+                                    return m('td.text-end', value);
+                                return m('td.text', value);
                             })
+                            // m('td.text', x.name),
+                            // m('td.text', x.npm),
+                            // m('td.text-end', x.npmLastMonthDownloadCount),
+                            // m('td.text-center', displaySymbol(x.vdom)),
+                            // m('td.text-center', displaySymbol(x.buildless)),
+                            // m('td.text-center', displaySymbol(x.eco)),
+                            // m('td.text-center', displaySymbol(x.hyperscript)),
+                            // m('td.text-center', displaySymbol(x.fnComp)),
+                            // m('td.text-end', m(`a[href=https://github.com/${x.github}]`, x.stargazers_count)),
+                            // m('td.text-end', x.watchers_count),
+                            // m('td.text-end', x.forks_count),
+                            // m('td.text-end', x.open_issues_count),
+                            // m('td.text-end', x.network_count),
+                            // m('td.text-end', x.subscribers_count),
                         ))
                     )
                 ),
