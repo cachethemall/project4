@@ -150,21 +150,6 @@ export function Comparision() {
                     m('thead',
                         m('tr',
                             columns.map(x => m('th', x))
-                            // m('th', 'Framework'),
-                            // m('th', 'npm'),
-                            // m('th', 'npm Last Month Download Count'),
-                            // m('th', 'Vdom'),
-                            // m('td', 'Buildless'),
-                            // m('td', 'Ecosystem'),
-                            // m('td', 'Hyperscript'),
-                            // m('td', 'Functional Component'),
-                            // m('td', 'ghStars'),
-                            // m('td', 'ghWatchers'),
-                            // m('td', 'ghForks'),
-                            // m('td', 'ghIssues'),
-                            // m('td', 'ghNetwork'),
-                            // m('td', 'ghSubscribers'),
-                            // m('td', 'ghLastPushed'),
                         )
                     ),
                     m('tbody',
@@ -179,20 +164,7 @@ export function Comparision() {
                                     return m('td.text-end', value);
                                 return m('td.text', value);
                             })
-                            // m('td.text', x.name),
-                            // m('td.text', x.npm),
-                            // m('td.text-end', x.npmLastMonthDownloadCount),
-                            // m('td.text-center', displaySymbol(x.vdom)),
-                            // m('td.text-center', displaySymbol(x.buildless)),
-                            // m('td.text-center', displaySymbol(x.eco)),
-                            // m('td.text-center', displaySymbol(x.hyperscript)),
-                            // m('td.text-center', displaySymbol(x.fnComp)),
-                            // m('td.text-end', m(`a[href=https://github.com/${x.github}]`, x.stargazers_count)),
-                            // m('td.text-end', x.watchers_count),
-                            // m('td.text-end', x.forks_count),
-                            // m('td.text-end', x.open_issues_count),
-                            // m('td.text-end', x.network_count),
-                            // m('td.text-end', x.subscribers_count),
+
                         ))
                     )
                 ),
