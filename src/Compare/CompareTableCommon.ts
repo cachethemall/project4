@@ -31,7 +31,7 @@ export function MkCompareTable(records, title: string) {
             }
         };
     };
-}export function generateTable(records: Array<any>, switcher, type?: string) {
+} export function generateTable(records: Array<any>, switcher, type?: string) {
     if (!type) {
         var numberOfProps: number = Math.max(...records.map(x => Object.entries(x).length));
         if (numberOfProps > records.length) {
@@ -47,33 +47,50 @@ export function MkCompareTable(records, title: string) {
     } else {
         return m('span', 'Unknown table type!');
     }
-
 }
-export function generateTableType2(records, switcher) {
-    let columns = Object.entries(records[0]).map(x => {
-        const [key] = x;
-        return key;
 
-    });
+function findAllColumns(records) {
+    let allColumns: Array<string> = [];
+    for (const record of records) {
+        let columns = Object.entries(record).map(x => {
+            const [key] = x;
+            return key;
+        });
+        columns.forEach(x => {
+            if (!allColumns.includes(x)) allColumns.push(x);
+        })
+    }
+    return allColumns;
+}
+
+function mkTableCells(x, key) {
+    let value = x[key];
+    if (key === 'githubPath') return m('td.text', m('a', { href: `https://github.com/${value}` }, value));
+    if (key === 'npmPath') return m('td.text', m('a', { href: `https://www.npmjs.com/package/${value}` }, value));
+    if (key === 'pushed_at') return m('td.text', new Date(value).toLocaleString());;
+    if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
+        return m('td.text-center', displaySymbol(value));
+    }
+    if (_.isNumber(value))
+        return m('td.text-end', value.toLocaleString());
+    return m('td.text', value);
+}
+
+export function generateTableType2(records, switcher) {
+    let columns = findAllColumns(records);
 
     return m('table.table',
         m('thead',
             m('tr',
                 m('th', { onclick: switcher }, '🔀'),
-                ...columns.filter(x => x !== 'name').map(x => m('th', x))
+                ...columns.filter(x => x !== 'name').map(x => m('th[scope=col]', parseCamelCaseToWords(x)))
             )
         ),
         m('tbody',
             records.map(x => m('tr',
-                columns.map(key => {
-                    let value = x[key];
-                    if (key === 'pushed_at') return m('td.text', new Date(value).toLocaleString());;
-                    if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
-                        return m('td.text-center', displaySymbol(value));
-                    }
-                    if (_.isNumber(value))
-                        return m('td.text-end', value);
-                    return m('td.text', value);
+                m('th[scope=row]', x.name),
+                columns.filter(key => key !== 'name').map(key => {
+                    return mkTableCells(x, key);
                 })
 
             ))
@@ -81,11 +98,7 @@ export function generateTableType2(records, switcher) {
     );
 }
 export function generateTableType1(records, switcher) {
-    let columns = Object.entries(records[0]).map(x => {
-        const [key] = x;
-        return key;
-
-    });
+    let columns = findAllColumns(records);
 
     return m('table.table.table-striped-columns',
         m('thead',
@@ -97,14 +110,7 @@ export function generateTableType1(records, switcher) {
         m('tbody',
             columns.filter(x => x !== 'name').map(key => m('tr', m('th[scope=row]', parseCamelCaseToWords(key)),
                 records.map(x => {
-                    let value = x[key];
-                    if (key === 'pushed_at') return m('td.text', new Date(value).toLocaleString());;
-                    if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
-                        return m('td.text-center', displaySymbol(value));
-                    }
-                    if (_.isNumber(value))
-                        return m('td.text-end', value.toLocaleString());
-                    return m('td.text', value);
+                    return mkTableCells(x, key);
                 }
                 )
             )
@@ -118,7 +124,9 @@ export async function updateComparisonList(choices: Array<IChoice>): Promise<Arr
         if (x.githubPath) {
             let json = await getGitHubStarForkWatch(x.githubPath);
             let readme = await fetchWithDelay(`https://raw.githubusercontent.com/${x.githubPath}/${json.default_branch}/README.md`).then(resp => resp.text());
-            const regexes = [/\(https:\/\/www\.npmjs\.com\/package\/(.+?)\)/m, /\(http:\/\/npm\.im\/(.+?)\)/m];
+            const regexes = [/\(https:\/\/www\.npmjs\.com\/package\/(.+?)\)/m,
+                /\(http:\/\/npm\.im\/(.+?)\)/m,
+                /https:\/\/www\.npmjs\.com\/package\/(.+?)\s/m];
             x.npmPath = getFirstMatchGroup(readme, regexes);
             x.stargazers_count = json.stargazers_count;
             x.watchers_count = json.watchers_count;
@@ -133,6 +141,8 @@ export async function updateComparisonList(choices: Array<IChoice>): Promise<Arr
         if (x.npmPath) {
             let json2 = await fetchWithDelay(`https://api.npmjs.org/downloads/point/last-month/${x.npmPath}`).then(resp => resp.json());
             x.npmLastMonthDownloadCount = json2.downloads;
+            json2 = await fetchWithDelay(`https://registry.npmjs.org/${x.npmPath}`).then(resp => resp.json());
+            
         }
         return x as IGithubStat;
     }

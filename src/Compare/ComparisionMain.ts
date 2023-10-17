@@ -10,7 +10,7 @@ export function ComparisionMain() {
         view: (vnode) => {
             return [
                 m(ComparisionUiFw),
-                // m(CompareChartLib),
+                m(CompareChartLib),
                 m('h1', "Css Frameworks"),
                 m('h1', "IDEs"),
             ];
