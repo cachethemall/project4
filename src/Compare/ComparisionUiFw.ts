@@ -126,16 +126,18 @@ async function updateComparisonList(choices: Array<IChoice>): Promise<Array<IGit
     ));
 }
 
-function generateTableType1(records) {
+function generateTableType1(records, switcher) {
     let columns = Object.entries(records[0]).map(x => {
         const [key] = x;
         return key;
 
     })
+
     return m('table.table.table-striped-columns',
         m('thead',
             m('tr',
-                ['#'].concat(records.map(x => x.name!)).map(x => m('th[scope=col]', x))
+            m('th[scope=col]', {onclick: switcher}, '🔀'),
+                ...records.map(x => x.name!).map(x => m('th[scope=col]', x))
             )
         ),
         m('tbody',
@@ -160,7 +162,7 @@ function generateTableType1(records) {
     );
 }
 
-function generateTableType2(records) {
+function generateTableType2(records, switcher) {
     let columns = Object.entries(records[0]).map(x => {
         const [key] = x;
         return key;
@@ -170,7 +172,8 @@ function generateTableType2(records) {
     return m('table.table',
         m('thead',
             m('tr',
-                columns.map(x => m('th', x))
+            m('th', {onclick: switcher}, '🔀'),
+                ...columns.filter(x => x !== 'name').map(x => m('th', x))
             )
         ),
         m('tbody',
@@ -191,15 +194,19 @@ function generateTableType2(records) {
     );
 }
 
-function generateTable(records: Array<any>, type: string | undefined) {
+function generateTable(records: Array<any>, switcher, type?: string) {
     if (!type) {
         var numberOfProps: number = Math.max(...records.map(x => Object.entries(x).length));
-        if (numberOfProps > records.length) return generateTableType1(records);
-        return generateTableType2(records);
+        if (numberOfProps > records.length) {
+            switcher('type1');
+            return generateTableType1(records, switcher);
+        }
+        switcher('type2');
+        return generateTableType2(records, switcher);
     } else if (type === 'type1') {
-        return generateTableType1(records);
+        return generateTableType1(records, switcher);
     } else if (type == 'type2') {
-        return generateTableType2(records);
+        return generateTableType2(records, switcher);
     } else {
         return m('span', 'Unknown table type!');
     }
@@ -207,6 +214,13 @@ function generateTable(records: Array<any>, type: string | undefined) {
 }
 
 export function ComparisionUiFw() {
+    let tableType = '';
+    function switchTableType(type?: string) {
+        if (!type) tableType = type!;
+        else if (tableType === 'type1') tableType = 'type2';
+        else tableType = 'type1';
+    }
+
     return {
         oninit: async (vnode) => {
             jsUiFws = await updateComparisonList(jsUiFws as Array<IChoice>);
@@ -216,7 +230,7 @@ export function ComparisionUiFw() {
             
             return [
                 m('h1', "JavaScript UI Frameworks"),
-                generateTableType2(jsUiFws),
+                generateTable(jsUiFws, switchTableType, tableType),
             ];
         }
     };
