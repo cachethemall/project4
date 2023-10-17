@@ -103,7 +103,7 @@ function parseCamelCaseToWords(text: string): string {
     return text.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/_/g, ' ');
 }
 
-async function updateComparisonList(choices: Array<IChoice>): Promise<Array<IGithubStat>> {
+export async function updateComparisonList(choices: Array<IChoice>): Promise<Array<IGithubStat>> {
     return await Promise.all(choices.map(async (x) => {
         let json = await getGitHubStarForkWatch(x.githubPath);
         let readme = await fetch(`https://raw.githubusercontent.com/${x.githubPath}/${json.default_branch}/README.md`).then(resp => resp.text());
@@ -213,27 +213,56 @@ function generateTable(records: Array<any>, switcher, type?: string) {
 
 }
 
-export function ComparisionUiFw() {
-    let tableType = '';
-    function switchTableType(type?: string) {
-        if (!type) tableType = type!;
-        else if (tableType === 'type1') tableType = 'type2';
-        else tableType = 'type1';
-    }
-
-    return {
-        oninit: async (vnode) => {
-            jsUiFws = await updateComparisonList(jsUiFws as Array<IChoice>);
-            m.redraw();
-        },
-        view: (vnode) => {
-            
-            return [
-                m('h1', "JavaScript UI Frameworks"),
-                generateTable(jsUiFws, switchTableType, tableType),
-            ];
+export function MkCompareTable(records, title: string) {
+    return () => {
+        let tableType = '';
+        function switchTableType(type?: string) {
+            if (!type) tableType = type!;
+            else if (tableType === 'type1') tableType = 'type2';
+            else tableType = 'type1';
         }
-    };
+    
+        return {
+            oninit: async (vnode) => {
+                records = await updateComparisonList(records as Array<IChoice>);
+                m.redraw();
+            },
+            view: (vnode) => {
+                
+                return [
+                    m('h1', title),
+                    generateTable(records, switchTableType, tableType),
+                ];
+            }
+        };
+    }
 }
+
+export const ComparisionUiFw = MkCompareTable(jsUiFws, "JavaScript UI Frameworks");
+
+// export function ComparisionUiFw() {
+//     let tableType = '';
+//     function switchTableType(type?: string) {
+//         if (!type) tableType = type!;
+//         else if (tableType === 'type1') tableType = 'type2';
+//         else tableType = 'type1';
+//     }
+
+//     return {
+//         oninit: async (vnode) => {
+//             jsUiFws = await updateComparisonList(jsUiFws as Array<IChoice>);
+//             m.redraw();
+//         },
+//         view: (vnode) => {
+            
+//             return [
+//                 m('h1', "JavaScript UI Frameworks"),
+//                 generateTable(jsUiFws, switchTableType, tableType),
+//             ];
+//         }
+//     };
+// }
+
+
 
 
