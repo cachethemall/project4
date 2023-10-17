@@ -126,6 +126,86 @@ async function updateComparisonList(choices: Array<IChoice>): Promise<Array<IGit
     ));
 }
 
+function generateTableType1(records) {
+    let columns = Object.entries(records[0]).map(x => {
+        const [key] = x;
+        return key;
+
+    })
+    return m('table.table.table-striped-columns',
+        m('thead',
+            m('tr',
+                ['#'].concat(records.map(x => x.name!)).map(x => m('th[scope=col]', x))
+            )
+        ),
+        m('tbody',
+            columns.filter(x => x !== 'name').map(key =>
+
+                m('tr', m('th[scope=row]', parseCamelCaseToWords(key)),
+                    records.map(x => {
+                        let value = x[key];
+                        if (key === 'pushed_at') return m('td.text', new Date(value).toLocaleString());;
+                        if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
+                            return m('td.text-center', displaySymbol(value));
+                        }
+                        if (_.isNumber(value))
+                            return m('td.text-end', value.toLocaleString());
+                        return m('td.text', value);
+                    }
+                    )
+                )
+            ),
+
+        )
+    );
+}
+
+function generateTableType2(records) {
+    let columns = Object.entries(records[0]).map(x => {
+        const [key] = x;
+        return key;
+
+    })
+
+    return m('table.table',
+        m('thead',
+            m('tr',
+                columns.map(x => m('th', x))
+            )
+        ),
+        m('tbody',
+            records.map(x => m('tr',
+                columns.map(key => {
+                    let value = x[key];
+                    if (key === 'pushed_at') return m('td.text', new Date(value).toLocaleString());;
+                    if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
+                        return m('td.text-center', displaySymbol(value));
+                    }
+                    if (_.isNumber(value))
+                        return m('td.text-end', value);
+                    return m('td.text', value);
+                })
+
+            ))
+        )
+    );
+}
+
+function generateTable(records: Array<any>, type: string | undefined) {
+    if (!type) {
+        var numberOfProps: number = Math.max(...records.map(x => Object.entries(x).length));
+        if (numberOfProps > records.length) return generateTableType1(records);
+        return generateTableType2(records);
+    } else if (type === 'type1') {
+        return generateTableType1(records);
+    } else if (type == 'type2') {
+        return generateTableType2(records);
+    } else {
+        return m('span', 'Unknown table type!');
+    }
+
+}
+
 export function ComparisionUiFw() {
     return {
         oninit: async (vnode) => {
@@ -133,41 +213,10 @@ export function ComparisionUiFw() {
             m.redraw();
         },
         view: (vnode) => {
-            let sampleObject = jsUiFws[0];
-            let columns = Object.entries(sampleObject).map(x => {
-                const [key] = x;
-                return key;
-
-            })
+            
             return [
                 m('h1', "JavaScript UI Frameworks"),
-                m('table.table.table-striped-columns',
-                    m('thead',
-                        m('tr',
-                            // columns.map(x => m('th', x))
-                            ['#'].concat(jsUiFws.map(x => x.name!)).map(x => m('th[scope=col]', x))
-                        )
-                    ),
-                    m('tbody',
-                        columns.filter(x => x !== 'name').map(key =>
-
-                            m('tr', m('th[scope=row]', parseCamelCaseToWords(key)),
-                                jsUiFws.map(x => {
-                                    let value = x[key];
-                                    if (key === 'pushed_at') return m('td.text', new Date(value).toLocaleString());;
-                                    if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
-                                        return m('td.text-center', displaySymbol(value));
-                                    }
-                                    if (_.isNumber(value))
-                                        return m('td.text-end', value.toLocaleString());
-                                    return m('td.text', value);
-                                }
-                                )
-                            )
-                        ),
-
-                    )
-                ),
+                generateTableType2(jsUiFws),
             ];
         }
     };
