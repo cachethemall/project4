@@ -99,7 +99,9 @@ function getFirstMatchGroup(readme: string, regexes: Array<RegExp>): string {
     return npmPackage;
 }
 
-
+function parseCamelCaseToWords(text: string): string {
+    return text.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/_/g, ' ');
+}
 
 async function updateComparisonList(choices: Array<IChoice>): Promise<Array<IGithubStat>> {
     return await Promise.all(choices.map(async (x) => {
@@ -146,26 +148,31 @@ export function Comparision() {
             })
             return [
                 m('h1', "JavaScript UI Frameworks"),
-                m('table.table',
+                m('table.table.table-striped-columns',
                     m('thead',
                         m('tr',
-                            columns.map(x => m('th', x))
+                            // columns.map(x => m('th', x))
+                            ['#'].concat(jsUiFws.map(x => x.name!)).map(x => m('th[scope=col]', x))
                         )
                     ),
                     m('tbody',
-                        jsUiFws.map(x => m('tr',
-                            columns.map(key => {
-                                let value = x[key];
-                                if (key === 'pushed_at') return m('td.text', new Date(value).toLocaleString());;
-                                if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
-                                    return m('td.text-center', displaySymbol(value));
-                                }
-                                if (_.isNumber(value))
-                                    return m('td.text-end', value);
-                                return m('td.text', value);
-                            })
+                        columns.filter(x => x !== 'name').map(key =>
 
-                        ))
+                            m('tr', m('th[scope=row]', parseCamelCaseToWords(key)),
+                                jsUiFws.map(x => {
+                                        let value = x[key];
+                                        if (key === 'pushed_at') return m('td.text', new Date(value).toLocaleString());;
+                                        if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
+                                            return m('td.text-center', displaySymbol(value));
+                                        }
+                                        if (_.isNumber(value))
+                                            return m('td.text-end', value.toLocaleString());
+                                        return m('td.text', value);
+                                    }
+                                )
+                            )
+                        ),
+
                     )
                 ),
                 m('h1', "Chart Libraries"),
