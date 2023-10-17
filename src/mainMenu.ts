@@ -1,6 +1,6 @@
 import m from "mithril";
 import { exampleApexCharts, exampleLightWeightCharts } from "./exampleCode";
-import { Comparision } from "./Comparision";
+import { ComparisionMain } from "./Compare/ComparisionMain";
 
 export function EmptyDiv(): any {
     let count = 0;
@@ -13,11 +13,11 @@ export function EmptyDiv(): any {
 }
 
 export function mainMenu() {
-    let chartElement2 = Comparision;
+    let chartElement2 = ComparisionMain;
     let chartLibs = {
         ApexCharts: exampleApexCharts,
         "Lightweight Charts": exampleLightWeightCharts,
-        Comparision: Comparision,
+        Comparision: ComparisionMain,
     };
     return {
         view: () => {

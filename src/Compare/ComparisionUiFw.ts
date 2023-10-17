@@ -2,7 +2,7 @@ import m from "mithril";
 import _ from 'lodash';
 
 interface IGithubStat {
-    github: string,
+    githubPath: string,
     stargazers_count: number,
     watchers_count: number,
     forks_count: number,
@@ -14,7 +14,7 @@ interface IGithubStat {
 
 interface IChoice extends IGithubStat {
     name: string,
-    npm: string,
+    npmPath: string,
     npmLastMonthDownloadCount: number,
     [key: string]: any;
 }
@@ -27,8 +27,8 @@ let jsUiFws: Array<Partial<IChoice>> = [
         eco: 1,
         hyperscript: 0.5,
         fnComp: 1,
-        github: 'facebook/react',
-        npm: '',
+        githubPath: 'facebook/react',
+        npmPath: '',
 
     },
     {
@@ -38,8 +38,8 @@ let jsUiFws: Array<Partial<IChoice>> = [
         eco: 0,
         hyperscript: 0.5,
         fnComp: 1,
-        github: 'preactjs/preact',
-        npm: '',
+        githubPath: 'preactjs/preact',
+        npmPath: '',
     },
     {
         name: 'Solid',
@@ -48,8 +48,8 @@ let jsUiFws: Array<Partial<IChoice>> = [
         eco: 0,
         hyperscript: 1,
         fnComp: 1,
-        github: 'solidjs/solid',
-        npm: '',
+        githubPath: 'solidjs/solid',
+        npmPath: '',
     },
     {
         name: 'Mithril',
@@ -58,8 +58,8 @@ let jsUiFws: Array<Partial<IChoice>> = [
         eco: 0,
         hyperscript: 1,
         fnComp: 1,
-        github: 'MithrilJS/mithril.js',
-        npm: '',
+        githubPath: 'MithrilJS/mithril.js',
+        npmPath: '',
     },
     {
         name: 'Inferno',
@@ -68,8 +68,8 @@ let jsUiFws: Array<Partial<IChoice>> = [
         eco: 0,
         hyperscript: 1,
         fnComp: 1,
-        github: 'infernojs/inferno',
-        npm: '',
+        githubPath: 'infernojs/inferno',
+        npmPath: '',
     },
 ];
 
@@ -105,14 +105,10 @@ function parseCamelCaseToWords(text: string): string {
 
 async function updateComparisonList(choices: Array<IChoice>): Promise<Array<IGithubStat>> {
     return await Promise.all(choices.map(async (x) => {
-        let json = await getGitHubStarForkWatch(x.github);
-        let readme = await fetch(`https://raw.githubusercontent.com/${x.github}/${json.default_branch}/README.md`).then(resp => resp.text());
+        let json = await getGitHubStarForkWatch(x.githubPath);
+        let readme = await fetch(`https://raw.githubusercontent.com/${x.githubPath}/${json.default_branch}/README.md`).then(resp => resp.text());
         const regexes = [/\(https:\/\/www\.npmjs\.com\/package\/(.+?)\)/m, /\(http:\/\/npm\.im\/(.+?)\)/m];
         let npmPackage = getFirstMatchGroup(readme, regexes);
-
-
-
-
 
         let json2 = await fetch(`https://api.npmjs.org/downloads/point/last-month/${npmPackage}`).then(resp => resp.json());
 
@@ -123,17 +119,14 @@ async function updateComparisonList(choices: Array<IChoice>): Promise<Array<IGit
         x.network_count = json.network_count;
         x.subscribers_count = json.subscribers_count;
         x.pushed_at = json.pushed_at;
-        x.npm = npmPackage;
+        x.npmPath = npmPackage;
         x.npmLastMonthDownloadCount = json2.downloads;
         return x as IGithubStat;
     }
     ));
 }
 
-
-export function Comparision() {
-
-
+export function ComparisionUiFw() {
     return {
         oninit: async (vnode) => {
             jsUiFws = await updateComparisonList(jsUiFws as Array<IChoice>);
@@ -160,25 +153,24 @@ export function Comparision() {
 
                             m('tr', m('th[scope=row]', parseCamelCaseToWords(key)),
                                 jsUiFws.map(x => {
-                                        let value = x[key];
-                                        if (key === 'pushed_at') return m('td.text', new Date(value).toLocaleString());;
-                                        if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
-                                            return m('td.text-center', displaySymbol(value));
-                                        }
-                                        if (_.isNumber(value))
-                                            return m('td.text-end', value.toLocaleString());
-                                        return m('td.text', value);
+                                    let value = x[key];
+                                    if (key === 'pushed_at') return m('td.text', new Date(value).toLocaleString());;
+                                    if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
+                                        return m('td.text-center', displaySymbol(value));
                                     }
+                                    if (_.isNumber(value))
+                                        return m('td.text-end', value.toLocaleString());
+                                    return m('td.text', value);
+                                }
                                 )
                             )
                         ),
 
                     )
                 ),
-                m('h1', "Chart Libraries"),
-                m('h1', "Css Frameworks"),
-                m('h1', "IDEs"),
             ];
         }
     };
 }
+
+
