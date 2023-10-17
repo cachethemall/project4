@@ -1,15 +1,22 @@
-import { IChoice } from "./CompareTableCommon";
+
 import { MkCompareTable } from "./CompareTableCommon";
+import { IChoice } from "./Interfaces";
 
 let choices: Array<Partial<IChoice>> = [
     {
         name: 'Lightweight Charts',
         goodDoc: 1,
-        githubPath: 'tradingview/lightweight-charts',
+        npmPath: 'lightweight-charts',
+    },
+    {
+        name: 'Charts.js',
+        goodDoc: 0,
+        npmPath: 'chart.js',
+        comment: 'No doc for candlestick chart'
     },
     {
         name: 'Apex Charts',
-        githubPath: '',
+        npmPath: 'apexcharts',
         panning: 0,
         comment: 'slow'
     },
@@ -17,11 +24,7 @@ let choices: Array<Partial<IChoice>> = [
         name: 'Google Chart',
         githubPath: '',
     },
-    {
-        name: 'Charts.js',
-        goodDoc: 0,
-        githubPath: '',
-    },
+ 
     {
         name: 'HighCharts',
         githubPath: '',
