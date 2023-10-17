@@ -13,7 +13,7 @@ export function EmptyDiv(): any {
 }
 
 export function mainMenu() {
-    let chartElement2 = ComparisionMain;
+    let chartElement2: any = ComparisionMain;
     let chartLibs = {
         ApexCharts: exampleApexCharts,
         "Lightweight Charts": exampleLightWeightCharts,
