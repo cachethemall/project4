@@ -10,8 +10,6 @@ let jsUiFws: Array<Partial<IChoice>> = [
         hyperscript: 0.5,
         fnComp: 1,
         githubPath: 'facebook/react',
-        npmPath: '',
-
     },
     {
         name: 'Preact',
@@ -21,7 +19,6 @@ let jsUiFws: Array<Partial<IChoice>> = [
         hyperscript: 0.5,
         fnComp: 1,
         githubPath: 'preactjs/preact',
-        npmPath: '',
     },
     {
         name: 'Solid',
@@ -31,7 +28,6 @@ let jsUiFws: Array<Partial<IChoice>> = [
         hyperscript: 1,
         fnComp: 1,
         githubPath: 'solidjs/solid',
-        npmPath: '',
     },
     {
         name: 'Mithril',
@@ -41,7 +37,6 @@ let jsUiFws: Array<Partial<IChoice>> = [
         hyperscript: 1,
         fnComp: 1,
         githubPath: 'MithrilJS/mithril.js',
-        npmPath: '',
     },
     {
         name: 'Inferno',
@@ -51,7 +46,6 @@ let jsUiFws: Array<Partial<IChoice>> = [
         hyperscript: 1,
         fnComp: 1,
         githubPath: 'infernojs/inferno',
-        npmPath: '',
     },
 ];
 

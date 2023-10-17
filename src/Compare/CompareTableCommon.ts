@@ -5,6 +5,7 @@ import _ from "lodash";
 
 import { displaySymbol, getFirstMatchGroup } from "../utils";
 import { parseCamelCaseToWords } from "../utils";
+import { fetchWithDelay } from "../fetchUtils";
 
 
 export function MkCompareTable(records, title: string) {
@@ -114,28 +115,31 @@ export function generateTableType1(records, switcher) {
 }
 export async function updateComparisonList(choices: Array<IChoice>): Promise<Array<IGithubStat>> {
     return await Promise.all(choices.map(async (x) => {
-        let json = await getGitHubStarForkWatch(x.githubPath);
-        let readme = await fetch(`https://raw.githubusercontent.com/${x.githubPath}/${json.default_branch}/README.md`).then(resp => resp.text());
-        const regexes = [/\(https:\/\/www\.npmjs\.com\/package\/(.+?)\)/m, /\(http:\/\/npm\.im\/(.+?)\)/m];
-        let npmPackage = getFirstMatchGroup(readme, regexes);
+        if (x.githubPath) {
+            let json = await getGitHubStarForkWatch(x.githubPath);
+            let readme = await fetchWithDelay(`https://raw.githubusercontent.com/${x.githubPath}/${json.default_branch}/README.md`).then(resp => resp.text());
+            const regexes = [/\(https:\/\/www\.npmjs\.com\/package\/(.+?)\)/m, /\(http:\/\/npm\.im\/(.+?)\)/m];
+            x.npmPath = getFirstMatchGroup(readme, regexes);
+            x.stargazers_count = json.stargazers_count;
+            x.watchers_count = json.watchers_count;
+            x.forks_count = json.forks_count;
+            x.open_issues_count = json.open_issues_count;
+            x.network_count = json.network_count;
+            x.subscribers_count = json.subscribers_count;
+            x.pushed_at = json.pushed_at;
 
-        let json2 = await fetch(`https://api.npmjs.org/downloads/point/last-month/${npmPackage}`).then(resp => resp.json());
+        }
 
-        x.stargazers_count = json.stargazers_count;
-        x.watchers_count = json.watchers_count;
-        x.forks_count = json.forks_count;
-        x.open_issues_count = json.open_issues_count;
-        x.network_count = json.network_count;
-        x.subscribers_count = json.subscribers_count;
-        x.pushed_at = json.pushed_at;
-        x.npmPath = npmPackage;
-        x.npmLastMonthDownloadCount = json2.downloads;
+        if (x.npmPath) {
+            let json2 = await fetchWithDelay(`https://api.npmjs.org/downloads/point/last-month/${x.npmPath}`).then(resp => resp.json());
+            x.npmLastMonthDownloadCount = json2.downloads;
+        }
         return x as IGithubStat;
     }
     ));
 }
 export async function getGitHubStarForkWatch(repo: string): Promise<any> {
-    let json = await fetch(`https://api.github.com/repos/${repo}`).then(resp => resp.json());
+    let json = await fetchWithDelay(`https://api.github.com/repos/${repo}`).then(resp => resp.json());
     return json;
 }
 export interface IGithubStat {

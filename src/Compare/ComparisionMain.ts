@@ -1,3 +1,4 @@
+import { CompareChartLib } from "./CompareChartLib";
 import { ComparisionUiFw } from "./ComparisionUiFw";
 import m from "mithril";
 
@@ -9,7 +10,7 @@ export function ComparisionMain() {
         view: (vnode) => {
             return [
                 m(ComparisionUiFw),
-                m('h1', "Chart Libraries"),
+                // m(CompareChartLib),
                 m('h1', "Css Frameworks"),
                 m('h1', "IDEs"),
             ];
