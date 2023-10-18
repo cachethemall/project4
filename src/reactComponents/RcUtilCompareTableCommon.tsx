@@ -41,7 +41,8 @@ export function RcUtilMkCompareTable(recordsInit, title: string) {
 
         return [
             m('h1', null, title),
-            generateTable(records, switchTableType, tableType),
+            generateTableType1(records, switchTableType),
+            // generateTable(records, switchTableType, tableType),
         ];
     };
 }
