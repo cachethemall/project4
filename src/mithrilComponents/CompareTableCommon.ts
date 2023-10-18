@@ -3,10 +3,10 @@ import m from "mithril";
 
 import _ from "lodash";
 
-import { displaySymbol } from "../utils";
+import { displaySymbol, findAllColumns } from "../utils";
 import { parseCamelCaseToWords } from "../utils";
-import { IChoice } from "./Interfaces";
-import { updateComparisonList } from "./GatherData";
+import { IChoice } from "../Compare/Interfaces";
+import { updateComparisonList } from "../Compare/GatherData";
 
 
 export function MkCompareTable(records, title: string) {
@@ -32,7 +32,9 @@ export function MkCompareTable(records, title: string) {
             }
         };
     };
-} export function generateTable(records: Array<any>, switcher, type?: string) {
+}
+
+export function generateTable(records: Array<any>, switcher, type?: string) {
     if (!type) {
         var numberOfProps: number = Math.max(...records.map(x => Object.entries(x).length));
         if (numberOfProps > records.length) {
@@ -50,19 +52,7 @@ export function MkCompareTable(records, title: string) {
     }
 }
 
-function findAllColumns(records) {
-    let allColumns: Array<string> = [];
-    for (const record of records) {
-        let columns = Object.entries(record).map(x => {
-            const [key] = x;
-            return key;
-        });
-        columns.forEach(x => {
-            if (!allColumns.includes(x)) allColumns.push(x);
-        })
-    }
-    return allColumns;
-}
+
 
 function mkTableCells(x, key) {
     let value = x[key];

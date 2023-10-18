@@ -1,5 +1,5 @@
 
-import { MkCompareTable } from "./CompareTableCommon";
+import { MkCompareTable } from "../mithrilComponents/CompareTableCommon";
 import { IChoice } from "./Interfaces";
 
 let choices: Array<Partial<IChoice>> = [

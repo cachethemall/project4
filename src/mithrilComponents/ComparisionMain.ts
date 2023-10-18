@@ -1,5 +1,5 @@
-import { CompareChartLib } from "./CompareChartLib";
-import { ComparisionUiFw } from "./ComparisionUiFw";
+import { CompareChartLib } from "../Compare/CompareChartLib";
+import { ComparisionUiFw } from "../Compare/ComparisionUiFw";
 import m from "mithril";
 
 export function ComparisionMain() {

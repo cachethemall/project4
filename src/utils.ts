@@ -30,7 +30,9 @@ function GetRoundNumber(price, roundDigit) {
     return ((Math.round((price * 10) ^ roundDigit) / 10) ^ roundDigit).toFixed(
         roundDigit
     );
-}function timestampToDateString(timestamp) {
+}
+
+function timestampToDateString(timestamp) {
     const date = new Date(timestamp * 1000);
 
     const year = date.getUTCFullYear();
@@ -44,4 +46,16 @@ function GetRoundNumber(price, roundDigit) {
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
+export function findAllColumns(records) {
+    let allColumns: Array<string> = [];
+    for (const record of records) {
+        let columns = Object.entries(record).map(x => {
+            const [key] = x;
+            return key;
+        });
+        columns.forEach(x => {
+            if (!allColumns.includes(x)) allColumns.push(x);
+        })
+    }
+    return allColumns;
+}
