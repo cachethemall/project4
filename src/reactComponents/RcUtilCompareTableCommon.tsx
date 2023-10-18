@@ -33,16 +33,15 @@ export function RcUtilMkCompareTable(recordsInit, title: string) {
         }
         useEffect(() => {
             (async () => {
-                let recordsFilled =await updateComparisonList(records as Array<IChoice>);
-                debugger;
-                recordsSet(recordsFilled);
+                // let recordsFilled =await updateComparisonList(records as Array<IChoice>);
+                recordsSet(records);
             })();
         })
 
         return [
             m('h1', null, title),
-            generateTableType1(records, switchTableType),
-            // generateTable(records, switchTableType, tableType),
+            // generateTableType1(records, switchTableType),
+            generateTable(records, switchTableType, tableType),
         ];
     };
 }
@@ -50,16 +49,17 @@ export function RcUtilMkCompareTable(recordsInit, title: string) {
 
 
 function mkTableCells(x, key) {
+    
     let value = x[key];
-    if (key === 'githubPath') return m('td.text', null, m('a', { href: `https://github.com/${value}` }, value));
-    if (key === 'npmPath') return m('td.text', null, m('a', { href: `https://www.npmjs.com/package/${value}` }, value));
-    if (['pushed_at', 'npmLastModifiedDateStr'].includes(key)) return m('td.text', null, value ? new Date(value).toLocaleString() : '');;
-    if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
-        return m('td.text-center', null, displaySymbol(value));
-    }
-    if (_.isNumber(value))
-        return m('td.text-end',null, value.toLocaleString());
-    return m('td.text',null, value);
+    // if (key === 'githubPath') return m('td', {className: 'text'}, m('a', { href: `https://github.com/${value}` }, value.toLocaleString()));
+    // if (key === 'npmPath') return m('td', {className: 'text'}, m('a', { href: `https://www.npmjs.com/package/${value}` }, value.toLocaleString()));
+    // if (['pushed_at', 'npmLastModifiedDateStr'].includes(key)) return m('td', {className: 'text'}, value ? new Date(value).toLocaleString() : '');;
+    // if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
+    //     return m('td', {className: 'text-center'}, displaySymbol(value));
+    // }
+    // if (_.isNumber(value))
+    //     return m('td',{className: 'text-end'}, value.toLocaleString());
+    return m('td',{className: 'text'}, value.toLocaleString());
 }
 
 export function generateTableType2(records, switcher) {
@@ -94,14 +94,13 @@ export function generateTableType1(records, switcher) {
             )
         ),
         m('tbody',
-            columns.filter(x => x !== 'name').map(key => m('tr', m('th', {scope: 'row'} ,parseCamelCaseToWords(key)),
-                records.map(x => {
+            columns.filter(x => x !== 'name').map(key => m('tr',null, 
+                m('th', {scope: 'row'} ,parseCamelCaseToWords(key)),
+                ...records.map(x => {
                     return mkTableCells(x, key);
-                }
-                )
-            )
-            )
-
+                })
+            
+            ))
         )
     );
 }

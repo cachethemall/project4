@@ -27,13 +27,15 @@ export function displaySymbol(value: number): string {
 }
 
 export function m(...args: Array<any>) {
-    if (args.length >= 3 || args.length == 1)
-        // @ts-ignore
+    if (args.length >= 3 || args.length == 1) {
         return React.createElement(...args);
-    else if (!_.isObject(args[1])) {
+    }
+    else if (!_.isPlainObject(args[1])) {
         return React.createElement(args[0], null, args[1]);
-    } else   return React.createElement(...args);
-} 
+    } else {
+        return React.createElement(...args);
+    }
+}
 function GetRoundNumber(price, roundDigit) {
     return ((Math.round((price * 10) ^ roundDigit) / 10) ^ roundDigit).toFixed(
         roundDigit
