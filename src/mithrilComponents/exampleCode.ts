@@ -1,5 +1,5 @@
 import ApexCharts from "apexcharts";
-import { ChartApp } from "./chartLib";
+import { ChartApp } from "../chartLib";
 import m from "mithril";
 
 export function exampleApexCharts() {

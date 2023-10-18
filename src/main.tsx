@@ -1,18 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-import { EmptyDiv, mainMenu } from "./mainMenu";
-import { showChart } from "./chartLib";
+import { mainMenu } from "./mithrilComponents/mainMenu.ts";
 import m from "mithril";
+import { RcMainMenu } from './reactComponents/ReactMainMenu.tsx';
 
-function ExampleComponent() {
-  return {view: () => m("h1", "abc233")}
-}
-m.mount(document.getElementById("appContainer"), mainMenu);
 
-// const reactRoot = ReactDOM.createRoot(document.getElementById('root')!);
+m.mount(document.getElementById("appContainer")!, mainMenu);
+
+const reactRoot = ReactDOM.createRoot(document.getElementById('root')!);
+reactRoot.render(
+      <React.StrictMode>
+        <RcMainMenu />
+      </React.StrictMode>
+    );  
+
 // let cc = 0;
 // setInterval(() => {
 //   reactRoot.render(
@@ -23,5 +26,4 @@ m.mount(document.getElementById("appContainer"), mainMenu);
 //   cc++;
 // }, 1000);
 
-// m.route(document.getElementById("appContainer"), "/main", {"/main": mainMenu});
 

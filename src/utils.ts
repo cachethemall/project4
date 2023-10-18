@@ -1,3 +1,4 @@
+import React from "react";
 
 export function parseCamelCaseToWords(text: string): string {
     return text.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/_/g, ' ');
@@ -24,3 +25,4 @@ export function displaySymbol(value: number): string {
     return '';
 }
 
+export const e = React.createElement;

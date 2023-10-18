@@ -1,6 +1,6 @@
 import m from "mithril";
 import { exampleApexCharts, exampleLightWeightCharts } from "./exampleCode";
-import { ComparisionMain } from "./Compare/ComparisionMain";
+import { ComparisionMain } from "../Compare/ComparisionMain";
 
 export function EmptyDiv(): any {
     let count = 0;
