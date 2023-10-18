@@ -7,7 +7,7 @@ import m from "mithril";
 import { RcMainMenu } from './reactComponents/ReactMainMenu.tsx';
 
 
-m.mount(document.getElementById("appContainer")!, mainMenu);
+// m.mount(document.getElementById("appContainer")!, mainMenu);
 
 const reactRoot = ReactDOM.createRoot(document.getElementById('root')!);
 reactRoot.render(

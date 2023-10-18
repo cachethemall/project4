@@ -26,7 +26,7 @@ function processQueue(domain) {
         requestQueue[domain].shift();
         setTimeout(() => {
           processQueue(domain);
-        }, 500); // Add a 1-second delay between requests to the same domain
+        }, 10000); // Add a 1-second delay between requests to the same domain
       });
   } else {
     delete requestQueue[domain];

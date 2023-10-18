@@ -1,6 +1,7 @@
-import { CompareChartLib } from "../Compare/CompareChartLib";
-import { ComparisionUiFw } from "../Compare/ComparisionUiFw";
+
+import { jsUiFws, libChartChoices } from "../Compare/ComparisionData";
 import m from "mithril";
+import { MkCompareTable } from "./CompareTableCommon";
 
 export function ComparisionMain() {
 
@@ -17,3 +18,7 @@ export function ComparisionMain() {
         }
     };
 }
+export const ComparisionUiFw = MkCompareTable(jsUiFws, "JavaScript UI Frameworks");
+
+export const CompareChartLib = MkCompareTable(libChartChoices, "JS Chart Libraries");
+
