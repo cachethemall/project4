@@ -4,12 +4,16 @@ import { IChoice, IGithubStat } from "./Interfaces";
 
 async function getGitHubStats(x: IChoice) {
     if (x.githubPath) {
-        let json = await fetchWithDelay(`https://api.github.com/repos/${x.githubPath}`).then(resp => resp.json());
-        let readme = await fetchWithDelay(`https://raw.githubusercontent.com/${x.githubPath}/${json.default_branch}/README.md`).then(resp => resp.text());
-        const regexes = [/\(https:\/\/www\.npmjs\.com\/package\/(.+?)\)/m,
-            /\(http:\/\/npm\.im\/(.+?)\)/m,
-            /https:\/\/www\.npmjs\.com\/package\/(.+?)\s/m];
-        x.npmPath = getFirstMatchGroup(readme, regexes);
+        let json;
+        json = await fetchWithDelay(`https://api.github.com/repos/${x.githubPath}`).then(resp => resp.json());
+        if (json.default_branch) {
+            let readme = await fetchWithDelay(`https://raw.githubusercontent.com/${x.githubPath}/${json.default_branch}/README.md`).then(resp => resp.text());
+            const regexes = [/\(https:\/\/www\.npmjs\.com\/package\/(.+?)\)/m,
+                /\(http:\/\/npm\.im\/(.+?)\)/m,
+                /https:\/\/www\.npmjs\.com\/package\/(.+?)\s/m];
+            x.npmPath = getFirstMatchGroup(readme, regexes);
+        }
+        
         x.stargazers_count = json.stargazers_count;
         x.watchers_count = json.watchers_count;
         x.forks_count = json.forks_count;
@@ -23,6 +27,7 @@ async function getGitHubStats(x: IChoice) {
 
 
 export async function updateComparisonList(choices: Array<IChoice>): Promise<Array<IGithubStat>> {
+    
     return await Promise.all(choices.map(async (x) => {
         await getGitHubStats(x);
 

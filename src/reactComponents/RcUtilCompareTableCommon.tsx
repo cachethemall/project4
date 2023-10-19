@@ -22,59 +22,59 @@ function generateTable(records, switcher, type) {
     }
 }
 
-export function RcUtilMkCompareTable(recordsInit, title: string) {
-    return () => {
-        const [tableType, tableTypeSet] = useState('');
-        const [records, recordsSet] = useState(recordsInit);
-        function switchTableType(type?: string) {
-            if (!type) tableTypeSet(type!);
-            else if (tableType === 'type1') tableTypeSet('type2');
-            else tableTypeSet('type1');
-        }
-        useEffect(() => {
-            (async () => {
-                // let recordsFilled =await updateComparisonList(records as Array<IChoice>);
-                recordsSet(records);
-            })();
-        })
+export function RcUtilMkCompareTable(props) {
 
-        return [
-            m('h1', null, title),
-            // generateTableType1(records, switchTableType),
-            generateTable(records, switchTableType, tableType),
-        ];
-    };
+    const [tableType, tableTypeSet] = useState('');
+    const [records, recordsSet] = useState(props.recordsInit);
+    function switchTableType(type?: string) {
+        if (!type) tableTypeSet(type!);
+        else if (tableType === 'type1') tableTypeSet('type2');
+        else tableTypeSet('type1');
+    }
+    useEffect(() => {
+        (async () => {
+            let recordsFilled = await updateComparisonList(records as Array<IChoice>);
+            recordsSet(recordsFilled);
+        })();
+    }, [props.recordsInit]);
+
+    return [
+        m('h1', null, props.title),
+        // generateTableType1(records, switchTableType),
+        generateTable(records, switchTableType, tableType),
+    ];
+
 }
 
 
 
 function mkTableCells(x, key) {
-    
+
     let value = x[key];
-    // if (key === 'githubPath') return m('td', {className: 'text'}, m('a', { href: `https://github.com/${value}` }, value.toLocaleString()));
-    // if (key === 'npmPath') return m('td', {className: 'text'}, m('a', { href: `https://www.npmjs.com/package/${value}` }, value.toLocaleString()));
-    // if (['pushed_at', 'npmLastModifiedDateStr'].includes(key)) return m('td', {className: 'text'}, value ? new Date(value).toLocaleString() : '');;
-    // if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
-    //     return m('td', {className: 'text-center'}, displaySymbol(value));
-    // }
-    // if (_.isNumber(value))
-    //     return m('td',{className: 'text-end'}, value.toLocaleString());
-    return m('td',{className: 'text'}, value.toLocaleString());
+    if (key === 'githubPath') return m('td', { className: 'text' }, m('a', { href: `https://github.com/${value}` }, value));
+    if (key === 'npmPath') return m('td', { className: 'text' }, m('a', { href: `https://www.npmjs.com/package/${value}` }, value));
+    if (['pushed_at', 'npmLastModifiedDateStr'].includes(key)) return m('td', { className: 'text' }, value ? new Date(value).toLocaleString() : '');;
+    if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
+        return m('td', { className: 'text-center' }, displaySymbol(value));
+    }
+    if (_.isNumber(value))
+        return m('td', { className: 'text-end' }, value.toLocaleString());
+    return m('td', { className: 'text' }, value);
 }
 
 export function generateTableType2(records, switcher) {
     let columns = findAllColumns(records);
 
-    return m('table',{className: 'table'},
-        m('thead',null,
-            m('tr',null,
+    return m('table', { className: 'table' },
+        m('thead', null,
+            m('tr', null,
                 m('th', { onClick: switcher }, '🔀'),
-                ...columns.filter(x => x !== 'name').map(x => m('th',{scope: 'col'}, parseCamelCaseToWords(x)))
+                ...columns.filter(x => x !== 'name').map(x => m('th', { scope: 'col' }, parseCamelCaseToWords(x)))
             )
         ),
-        m('tbody',null,
-            records.map(x => m('tr',null,
-                m('th',{scope: 'row'}, x.name),
+        m('tbody', null,
+            records.map(x => m('tr', null,
+                m('th', { scope: 'row' }, x.name),
                 columns.filter(key => key !== 'name').map(key => {
                     return mkTableCells(x, key);
                 })
@@ -86,20 +86,20 @@ export function generateTableType2(records, switcher) {
 export function generateTableType1(records, switcher) {
     let columns = findAllColumns(records);
 
-    return m('table',{className: 'table table-striped-columns'},
-        m('thead',null,
-            m('tr',null,
+    return m('table', { className: 'table table-striped-columns' },
+        m('thead', null,
+            m('tr', null,
                 m('th', { onClick: switcher, scope: 'col' }, '🔀'),
-                ...records.map(x => x.name!).map(x => m('th',{scope: 'col'}, x))
+                ...records.map(x => x.name!).map(x => m('th', { scope: 'col' }, x))
             )
         ),
         m('tbody',
-            columns.filter(x => x !== 'name').map(key => m('tr',null, 
-                m('th', {scope: 'row'} ,parseCamelCaseToWords(key)),
+            columns.filter(x => x !== 'name').map(key => m('tr', null,
+                m('th', { scope: 'row' }, parseCamelCaseToWords(key)),
                 ...records.map(x => {
                     return mkTableCells(x, key);
                 })
-            
+
             ))
         )
     );

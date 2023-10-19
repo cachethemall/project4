@@ -8,11 +8,11 @@ import { jsUiFws, libChartChoices } from "../Compare/ComparisionData";
 
 
 export function RcComparisionMain() {
-    const RcComparisionUiFw = RcUtilMkCompareTable(jsUiFws, "Js Ui Fws");
+    // const RcComparisionUiFw = RcUtilMkCompareTable(jsUiFws, "Js Ui Fws");
     // const RcCompareChartLib = RcUtilMkCompareTable(libChartChoices, "Js Chart Libs");
     return <>
-        <RcComparisionUiFw />
-        {/* <RcCompareChartLib /> */}
+        <RcUtilMkCompareTable recordsInit={jsUiFws} title={"Js Ui Fws"} />
+        <RcUtilMkCompareTable recordsInit={libChartChoices} title={"Js Chart Libs"} />
         <h1>Css Frameworks</h1>
         <h1>Web IDEs</h1>
     </>;

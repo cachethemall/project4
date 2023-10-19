@@ -1,17 +1,16 @@
 const requestQueue = {}; // This will store the request queues for each domain
 
-function addToQueue(domain, callback) {
-  if (!requestQueue[domain]) {
-    requestQueue[domain] = [];
-  }
-  requestQueue[domain].push(callback);
-  if (requestQueue[domain].length === 1) {
-    processQueue(domain);
-  }
-}
+
 
 function processQueue(domain) {
-  const callback = requestQueue[domain][0];
+  let callback;
+  try {
+    callback = requestQueue[domain][0];
+  } catch (err) {
+    debugger;
+    return;
+  }
+  
   
   if (callback) {
     fetch(callback.url, callback.options)
@@ -26,9 +25,10 @@ function processQueue(domain) {
         requestQueue[domain].shift();
         setTimeout(() => {
           processQueue(domain);
-        }, 10000); // Add a 1-second delay between requests to the same domain
+        }, 2000); // Add a 1-second delay between requests to the same domain
       });
-  } else {
+  } 
+  else {
     delete requestQueue[domain];
   }
 }
@@ -39,4 +39,14 @@ export function fetchWithDelay(url, options?): Promise<any> {
   return new Promise((resolve, reject) => {
     addToQueue(domain, { url, options, resolve, reject });
   });
+}
+
+function addToQueue(domain, callback) {
+  if (!requestQueue[domain]) {
+    requestQueue[domain] = [];
+  }
+  requestQueue[domain].push(callback);
+  if (requestQueue[domain].length === 1) {
+    processQueue(domain);
+  }
 }
