@@ -115,3 +115,22 @@ export let libChartChoices: Array<Partial<IChoice>> = [
     },
 ];
 
+export let webIDEChoices: Array<Partial<IChoice>> = [
+    {
+        name: 'https://stackblitz.com/',
+        replaceMultipleFiles: 1,
+        privateRepo: 1,
+    },
+    {
+        name: 'https://codesandbox.io/',
+        replaceMultipleFiles: 0,
+        privateRepo: 0,
+    },
+    { name: 'https://replit.com/' },
+    { name: 'https://glitch.com/' }
+].map((x: any) => {
+    const domain = new URL(x.name).hostname;
+    x.url = x.name;
+    x.name = domain;
+    return x;
+});

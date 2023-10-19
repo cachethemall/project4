@@ -2,7 +2,7 @@ import { useState } from "react"
 import { RcExampleApexCharts } from "./RcExampleApexCharts";
 import { RcExampleLightWeightCharts } from "./RcExampleLightWeightCharts";
 import { RcUtilMkCompareTable } from "./RcUtilCompareTableCommon";
-import { jsUiFws, libChartChoices } from "../Compare/ComparisionData";
+import { jsUiFws, libChartChoices, webIDEChoices } from "../Compare/ComparisionData";
 
 
 
@@ -13,8 +13,9 @@ export function RcComparisionMain() {
     return <>
         <RcUtilMkCompareTable recordsInit={jsUiFws} title={"Js Ui Fws"} />
         <RcUtilMkCompareTable recordsInit={libChartChoices} title={"Js Chart Libs"} />
+        <RcUtilMkCompareTable recordsInit={webIDEChoices} title={"Web IDEs"} />
         <h1>Css Frameworks</h1>
-        <h1>Web IDEs</h1>
+        
     </>;
 }
 

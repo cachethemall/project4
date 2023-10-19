@@ -5,15 +5,7 @@ import { updateComparisonList } from "../Compare/GatherData";
 import _ from "lodash";
 
 function generateTable(records, switcher, type) {
-    if (!type) {
-        var numberOfProps: number = Math.max(...records.map(x => Object.entries(x).length));
-        if (numberOfProps > records.length) {
-            switcher('type1');
-            return generateTableType1(records, switcher);
-        }
-        switcher('type2');
-        return generateTableType2(records, switcher);
-    } else if (type === 'type1') {
+    if (type === 'type1') {
         return generateTableType1(records, switcher);
     } else if (type == 'type2') {
         return generateTableType2(records, switcher);
@@ -33,15 +25,24 @@ export function RcUtilMkCompareTable(props) {
     }
     useEffect(() => {
         (async () => {
+            var numberOfProps: number = Math.max(...records.map(x => Object.entries(x).length));
+            if (numberOfProps > records.length) {
+                tableTypeSet('type1');
+            } else tableTypeSet('type2');
+            
             let recordsFilled = await updateComparisonList(records as Array<IChoice>);
             recordsSet(recordsFilled);
+
+           
+
         })();
     }, [props.recordsInit]);
 
     return [
-        m('h1', null, props.title),
+        m('h1', { key: `h1-${props.title}` }, props.title),
         // generateTableType1(records, switchTableType),
-        generateTable(records, switchTableType, tableType),
+        m('div', { key: `table-${props.title}` },
+            generateTable(records, switchTableType, tableType)),
     ];
 
 }
@@ -51,15 +52,15 @@ export function RcUtilMkCompareTable(props) {
 function mkTableCells(x, key) {
 
     let value = x[key];
-    if (key === 'githubPath') return m('td', { className: 'text' }, m('a', { href: `https://github.com/${value}` }, value));
-    if (key === 'npmPath') return m('td', { className: 'text' }, m('a', { href: `https://www.npmjs.com/package/${value}` }, value));
-    if (['pushed_at', 'npmLastModifiedDateStr'].includes(key)) return m('td', { className: 'text' }, value ? new Date(value).toLocaleString() : '');;
+    if (key === 'githubPath') return m('td', { className: 'text', key: `${x.name}-${key}` }, m('a', { href: `https://github.com/${value}` }, value));
+    if (key === 'npmPath') return m('td', { className: 'text', key: `${x.name}-${key}` }, m('a', { href: `https://www.npmjs.com/package/${value}` }, value));
+    if (['pushed_at', 'npmLastModifiedDateStr'].includes(key)) return m('td', { className: 'text', key: `${x.name}-${key}` }, value ? new Date(value).toLocaleString() : '');;
     if (['vdom', 'buildless', 'eco', 'hyperscript', 'fnComp'].includes(key)) {
-        return m('td', { className: 'text-center' }, displaySymbol(value));
+        return m('td', { className: 'text-center', key: `${x.name}-${key}` }, displaySymbol(value));
     }
     if (_.isNumber(value))
-        return m('td', { className: 'text-end' }, value.toLocaleString());
-    return m('td', { className: 'text' }, value);
+        return m('td', { className: 'text-end', key: `${x.name}-${key}` }, value.toLocaleString());
+    return m('td', { className: 'text', key: `${x.name}-${key}` }, value);
 }
 
 export function generateTableType2(records, switcher) {
@@ -69,11 +70,11 @@ export function generateTableType2(records, switcher) {
         m('thead', null,
             m('tr', null,
                 m('th', { onClick: switcher }, '🔀'),
-                ...columns.filter(x => x !== 'name').map(x => m('th', { scope: 'col' }, parseCamelCaseToWords(x)))
+                ...columns.filter(x => x !== 'name').map(x => m('th', { scope: 'col', key: x }, parseCamelCaseToWords(x)))
             )
         ),
         m('tbody', null,
-            records.map(x => m('tr', {key: x.name},
+            records.map(x => m('tr', { key: x.name },
                 m('th', { scope: 'row' }, x.name),
                 columns.filter(key => key !== 'name').map(key => {
                     return mkTableCells(x, key);
@@ -94,7 +95,7 @@ export function generateTableType1(records, switcher) {
             )
         ),
         m('tbody',
-            columns.filter(x => x !== 'name').map(key => m('tr', {key},
+            columns.filter(x => x !== 'name').map(key => m('tr', { key },
                 m('th', { scope: 'row' }, parseCamelCaseToWords(key)),
                 ...records.map(x => {
                     return mkTableCells(x, key);
