@@ -6,7 +6,7 @@ async function getGitHubStats(x: IChoice) {
     if (x.githubPath) {
         let json;
         json = await fetchWithDelay(`https://api.github.com/repos/${x.githubPath}`).then(resp => resp.json());
-        if (json.default_branch) {
+        if (!x.npmPath && json.default_branch) {
             let readme = await fetchWithDelay(`https://raw.githubusercontent.com/${x.githubPath}/${json.default_branch}/README.md`).then(resp => resp.text());
             const regexes = [/\(https:\/\/www\.npmjs\.com\/package\/(.+?)\)/m,
                 /\(http:\/\/npm\.im\/(.+?)\)/m,
@@ -14,13 +14,13 @@ async function getGitHubStats(x: IChoice) {
             x.npmPath = getFirstMatchGroup(readme, regexes);
         }
         
-        x.stargazers_count = json.stargazers_count;
-        x.watchers_count = json.watchers_count;
-        x.forks_count = json.forks_count;
-        x.open_issues_count = json.open_issues_count;
-        x.network_count = json.network_count;
-        x.subscribers_count = json.subscribers_count;
-        x.pushed_at = json.pushed_at;
+        x.stargazers_count = json.stargazers_count ?? json.message;
+        x.watchers_count = json.watchers_count ?? json.message;
+        x.forks_count = json.forks_count ?? json.message;
+        x.open_issues_count = json.open_issues_count ?? json.message;
+        x.network_count = json.network_count ?? json.message;
+        x.subscribers_count = json.subscribers_count ?? json.message;
+        x.pushed_at = json.pushed_at ?? json.message;
 
     }
 }

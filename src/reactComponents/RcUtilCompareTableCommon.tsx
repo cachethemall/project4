@@ -73,7 +73,7 @@ export function generateTableType2(records, switcher) {
             )
         ),
         m('tbody', null,
-            records.map(x => m('tr', null,
+            records.map(x => m('tr', {key: x.name},
                 m('th', { scope: 'row' }, x.name),
                 columns.filter(key => key !== 'name').map(key => {
                     return mkTableCells(x, key);
@@ -94,7 +94,7 @@ export function generateTableType1(records, switcher) {
             )
         ),
         m('tbody',
-            columns.filter(x => x !== 'name').map(key => m('tr', null,
+            columns.filter(x => x !== 'name').map(key => m('tr', {key},
                 m('th', { scope: 'row' }, parseCamelCaseToWords(key)),
                 ...records.map(x => {
                     return mkTableCells(x, key);

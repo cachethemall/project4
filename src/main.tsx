@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-import { mainMenu } from "./mithrilComponents/mainMenu.ts";
-import m from "mithril";
+// import { mainMenu } from "./mithrilComponents/mainMenu.ts";
+// import m from "mithril";
 import { RcMainMenu } from './reactComponents/ReactMainMenu.tsx';
 
 

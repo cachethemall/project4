@@ -15,6 +15,7 @@ function processQueue(domain: string) {
       })
       .catch(error => {
         callback.reject(error);
+        // callback.resolve(JSON.stringify(error));
       })
       .finally(() => {
         requestQueue[domain].shift();
