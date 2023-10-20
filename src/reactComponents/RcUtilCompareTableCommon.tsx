@@ -14,10 +14,10 @@ function generateTable(records, switcher, type, demoShowSet) {
     }
 }
 
-export function RcUtilMkCompareTable(props) {
-
+export function RcUtilMkCompareTable({title, recordsInit}) {
+    
     const [tableType, tableTypeSet] = useState('');
-    const [records, recordsSet] = useState(props.recordsInit);
+    const [records, recordsSet] = useState(recordsInit);
     const [demoShow, demoShowSet] = useState(() => (() => null));
     function switchTableType(type?: string) {
         if (!type) tableTypeSet(type!);
@@ -26,23 +26,30 @@ export function RcUtilMkCompareTable(props) {
     }
     useEffect(() => {
         (async () => {
-            var numberOfProps: number = Math.max(...records.map(x => Object.entries(x).length));
+            console.log(`Inside Async: ${JSON.stringify(recordsInit)}`);
+            recordsSet(recordsInit);
+            var numberOfProps: number = Math.max(...recordsInit.map(x => Object.entries(x).length));
             if (numberOfProps > records.length) {
                 tableTypeSet('type1');
             } else tableTypeSet('type2');
             
-            let recordsFilled = await updateComparisonList(records as Array<IChoice>);
-            recordsSet(recordsFilled);
-
-           
-
+            let recordsFilled = await updateComparisonList(recordsInit as Array<IChoice>);
+            recordsSet(prevState => {
+                if (Object.is(recordsInit, prevState)) return recordsFilled;
+                return prevState;
+            });
         })();
-    }, [props.recordsInit]);
+
+        // console.log(`Inside: ${JSON.stringify(recordsInit)}`);
+        // recordsSet(recordsInit);
+    }, [recordsInit]);
+
+    console.log(`Outside: ${JSON.stringify(records)}`);
 
     return [
-        m('h1', { key: `h1-${props.title}` }, props.title),
-        m('div', {key: `demo-${props.title}`}, m(demoShow)),
-        m('div', { key: `table-${props.title}` },
+        m('h1', { key: `h1-${title}` }, title),
+        m('div', {key: `demo-${title}`}, m(demoShow)),
+        m('div', { key: `table-${title}` },
             generateTable(records, switchTableType, tableType, demoShowSet)),
     ];
 

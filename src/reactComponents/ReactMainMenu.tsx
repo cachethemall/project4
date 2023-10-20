@@ -5,17 +5,6 @@ import { jsUiFws, libChartChoices, webIDEChoices } from "../Compare/ComparisionD
 
 
 
-export function RcComparisionMain() {
-    // const RcComparisionUiFw = RcUtilMkCompareTable(jsUiFws, "Js Ui Fws");
-    // const RcCompareChartLib = RcUtilMkCompareTable(libChartChoices, "Js Chart Libs");
-    return <>
-        <RcUtilMkCompareTable recordsInit={libChartChoices} title={"Js Chart Libs"} />
-        <RcUtilMkCompareTable recordsInit={webIDEChoices} title={"Web IDEs"} />
-        <RcUtilMkCompareTable recordsInit={jsUiFws} title={"Js Ui Fws"} />
-        <h1>Css Frameworks</h1>
-        
-    </>;
-}
 
 
 export function RcMainMenu() {
@@ -37,7 +26,7 @@ export function RcMainMenu() {
                 <ul className="navbar-nav">
                     {Object.entries(menuItems).map(x => <li className="nav-item" key={x[0]}>
                         <a className="nav-link" onClick={() => {
-                            console.log("aaa");
+                            console.log(x[0]);
                             chartElement2Set([x[0], x[1]]);
                         }}>{x[0]}</a>
                     </li>)}

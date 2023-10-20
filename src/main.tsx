@@ -11,9 +11,9 @@ import { RcMainMenu } from './reactComponents/ReactMainMenu.tsx';
 
 const reactRoot = ReactDOM.createRoot(document.getElementById('root')!);
 reactRoot.render(
-      <React.StrictMode>
+      // <React.StrictMode>
         <RcMainMenu />
-      </React.StrictMode>
+      // </React.StrictMode>
     );  
 
 // let cc = 0;
