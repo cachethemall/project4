@@ -24,26 +24,26 @@ export function RcExampleLightWeightCharts() {
 export function RcTopLeftInfo(props) {
     return m(
         "div",
-        { class: "position-absolute top-0 start-0 z-1" },
-        m("dl", { class: "row" }, [
-            m("dt", { class: "col" }, props?.currentBar?.symbol),
-            m("dd", { class: "col" }, ""),
-            // m("dt", { class: "col" }, "T"),
+        { className: "position-absolute top-0 start-0 z-1" },
+        m("dl", { className: "row" }, [
+            m("dt", { className: "col" }, props?.currentBar?.symbol),
+            m("dd", { className: "col" }, ""),
+            // m("dt", { className: "col" }, "T"),
             // m(
             //   "dd",
-            //   { class: "col" },
+            //   { className: "col" },
             //   bar?.time != null ? timestampToDateString(bar?.time) : null
             // ),
-            m("dt", { class: "col" }, "O"),
-            m("dd", { class: "col" }, props?.currentBar?.open),
-            m("dt", { class: "col" }, "H"),
-            m("dd", { class: "col" }, props?.currentBar?.high),
-            m("dt", { class: "col" }, "L"),
-            m("dd", { class: "col" }, props?.currentBar?.low),
-            m("dt", { class: "col" }, "C"),
-            m("dd", { class: "col" }, props?.currentBar?.close),
-            m("dt", { class: "col" }, "V"),
-            m("dd", { class: "col" }, props?.currentBar?.volume),
+            m("dt", { className: "col" }, "O"),
+            m("dd", { className: "col" }, props?.currentBar?.open),
+            m("dt", { className: "col" }, "H"),
+            m("dd", { className: "col" }, props?.currentBar?.high),
+            m("dt", { className: "col" }, "L"),
+            m("dd", { className: "col" }, props?.currentBar?.low),
+            m("dt", { className: "col" }, "C"),
+            m("dd", { className: "col" }, props?.currentBar?.close),
+            m("dt", { className: "col" }, "V"),
+            m("dd", { className: "col" }, props?.currentBar?.volume),
         ]),
     );
 }
@@ -176,16 +176,16 @@ export function RcChartApp(props) {
             chart.remove();
         };
     }, [chartData]);
-    return m("div", { class: "container-fluid" }, [
+    return m("div", { className: "container-fluid" }, [
         m(
             "div",
-            { class: "row" },
-            m("div", { class: "col" }, [
-                m('div', {class: "position-relative"}, 
+            { className: "row" },
+            m("div", { className: "col" }, [
+                m('div', {className: "position-relative"}, 
                 [m("div", {
                     ref: chartElementRef,
                     id: "chartContainer",
-                    // class: "z-0",
+                    // className: "z-0",
                 }),
                 m(RcTopLeftInfo, {
                     currentBar: currentBar,
@@ -194,7 +194,7 @@ export function RcChartApp(props) {
                 
             ]),
         ),
-        m("div", { class: "row" }, [m("div", { class: "col" })]),
+        m("div", { className: "row" }, [m("div", { className: "col" })]),
     ]);
 }
 

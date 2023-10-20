@@ -1,6 +1,4 @@
 import { useState } from "react"
-import { RcExampleApexCharts } from "./RcExampleApexCharts";
-import { RcExampleLightWeightCharts } from "./RcExampleLightWeightCharts";
 import { RcUtilMkCompareTable } from "./RcUtilCompareTableCommon";
 import { jsUiFws, libChartChoices, webIDEChoices } from "../Compare/ComparisionData";
 
@@ -21,11 +19,11 @@ export function RcComparisionMain() {
 
 
 export function RcMainMenu() {
-    const [ChartElement2, chartElement2Set] = useState(() => RcComparisionMain);
-    const chartLibs = {
-        ApexCharts: RcExampleApexCharts,
-        "Lightweight Charts": RcExampleLightWeightCharts,
-        Comparision: RcComparisionMain
+    const [ChartElement2, chartElement2Set] = useState(["Js Chart Libs", libChartChoices]);
+    const menuItems = {
+        "Js Chart Libs": libChartChoices,
+        "Web IDEs": webIDEChoices,
+        "Js Ui Fws": jsUiFws
     };
     return <>
         <nav className="navbar navbar-expand-sm bg-body-tertiary">
@@ -37,15 +35,15 @@ export function RcMainMenu() {
             </div>
             <div className="collapse navbar-collapse" id="navbarNav">
                 <ul className="navbar-nav">
-                    {Object.entries(chartLibs).map(x => <li className="nav-item" key={x[0]}>
+                    {Object.entries(menuItems).map(x => <li className="nav-item" key={x[0]}>
                         <a className="nav-link" onClick={() => {
                             console.log("aaa");
-                            chartElement2Set(() => x[1]);
+                            chartElement2Set([x[0], x[1]]);
                         }}>{x[0]}</a>
                     </li>)}
                 </ul>
             </div>
         </nav>
-        <ChartElement2 />
+        <RcUtilMkCompareTable title={ChartElement2[0]} recordsInit={ChartElement2[1]} />
     </>
 }

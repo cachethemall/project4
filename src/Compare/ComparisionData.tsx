@@ -117,13 +117,7 @@ export let libChartChoices: Array<Partial<IChoice>> = [
         name: 'LiveCharts2',
         githubPath: '',
     },
-].map(x => {
-    if (!x.demoComponent) {
-        // @ts-ignore
-        x.demoComponent = () => <p>No demo!</p>;
-    }
-    return x
-});
+];
 
 export let webIDEChoices: Array<Partial<IChoice>> = [
     {
