@@ -55,6 +55,8 @@ export let libChartChoices: Array<Partial<IChoice>> = [
     {
         name: 'Lightweight Charts',
         goodDoc: 1,
+        zoom: 1,
+        panning: 1,
         npmPath: 'lightweight-charts',
         demoComponent: RcExampleLightWeightCharts,
     },
@@ -67,6 +69,8 @@ export let libChartChoices: Array<Partial<IChoice>> = [
     {
         name: 'Apex Charts',
         npmPath: 'apexcharts',
+        goodDoc: 1,
+        zoom: 0.5,
         panning: 0,
         comment: 'slow',
         demoComponent: RcExampleApexCharts,
@@ -74,6 +78,7 @@ export let libChartChoices: Array<Partial<IChoice>> = [
     {
         name: 'Google Chart',
         githubPath: '',
+        comment: "Candlestick chart can't pan & zoom freely. No npm/es module.",
     },
 
     {
