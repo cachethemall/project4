@@ -60,27 +60,7 @@ export let libChartChoices: Array<Partial<IChoice>> = [
         npmPath: 'lightweight-charts',
         demoComponent: RcExampleLightWeightCharts,
     },
-    {
-        name: 'Charts.js',
-        goodDoc: 0,
-        npmPath: 'chart.js',
-        comment: 'No doc for candlestick chart',
-    },
-    {
-        name: 'Apex Charts',
-        npmPath: 'apexcharts',
-        goodDoc: 1,
-        zoom: 0.5,
-        panning: 0,
-        comment: 'slow',
-        demoComponent: RcExampleApexCharts,
-    },
-    {
-        name: 'Google Chart',
-        githubPath: '',
-        comment: "Candlestick chart can't pan & zoom freely. No npm/es module.",
-    },
-
+ 
     {
         name: 'HighCharts',
         githubPath: '',
@@ -121,7 +101,29 @@ export let libChartChoices: Array<Partial<IChoice>> = [
     {
         name: 'LiveCharts2',
         githubPath: '',
+        comment: 'Blazor WASM',
     },
+    {
+        name: 'Charts.js',
+        goodDoc: 0,
+        npmPath: 'chart.js',
+        comment: 'No doc for candlestick chart',
+    },
+    {
+        name: 'Apex Charts',
+        npmPath: 'apexcharts',
+        goodDoc: 1,
+        zoom: 0.5,
+        panning: 0,
+        comment: 'slow',
+        demoComponent: RcExampleApexCharts,
+    },
+    {
+        name: 'Google Chart',
+        githubPath: '',
+        comment: "Candlestick chart can't pan & zoom freely. No npm/es module.",
+    },
+
 ];
 
 export let webIDEChoices: Array<Partial<IChoice>> = [
