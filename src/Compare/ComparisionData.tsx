@@ -54,6 +54,7 @@ export let jsUiFws: Array<Partial<IChoice>> = [
 export let libChartChoices: Array<Partial<IChoice>> = [
     {
         name: 'Lightweight Charts',
+        comment: '',
         goodDoc: 1,
         zoom: 1,
         panning: 1,
@@ -98,6 +99,7 @@ export let libChartChoices: Array<Partial<IChoice>> = [
         name: 'lightningchart',
         githubPath: '',
     },
+    // Bad
     {
         name: 'LiveCharts2',
         githubPath: '',
