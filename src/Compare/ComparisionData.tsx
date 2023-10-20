@@ -1,3 +1,5 @@
+import { RcExampleApexCharts } from "../reactComponents/RcExampleApexCharts";
+import { RcExampleLightWeightCharts } from "../reactComponents/RcExampleLightWeightCharts";
 import { IChoice } from "./Interfaces";
 
 
@@ -54,18 +56,20 @@ export let libChartChoices: Array<Partial<IChoice>> = [
         name: 'Lightweight Charts',
         goodDoc: 1,
         npmPath: 'lightweight-charts',
+        demoComponent: RcExampleLightWeightCharts,
     },
     {
         name: 'Charts.js',
         goodDoc: 0,
         npmPath: 'chart.js',
-        comment: 'No doc for candlestick chart'
+        comment: 'No doc for candlestick chart',
     },
     {
         name: 'Apex Charts',
         npmPath: 'apexcharts',
         panning: 0,
-        comment: 'slow'
+        comment: 'slow',
+        demoComponent: RcExampleApexCharts,
     },
     {
         name: 'Google Chart',
@@ -113,21 +117,36 @@ export let libChartChoices: Array<Partial<IChoice>> = [
         name: 'LiveCharts2',
         githubPath: '',
     },
-];
+].map(x => {
+    if (!x.demoComponent) {
+        // @ts-ignore
+        x.demoComponent = () => <p>No demo!</p>;
+    }
+    return x
+});
 
 export let webIDEChoices: Array<Partial<IChoice>> = [
     {
         name: 'https://stackblitz.com/',
         replaceMultipleFiles: 1,
         privateRepo: 1,
+        refactor: 1,
     },
     {
         name: 'https://codesandbox.io/',
         replaceMultipleFiles: 0,
         privateRepo: 0,
     },
-    { name: 'https://replit.com/' },
-    { name: 'https://glitch.com/' }
+    {
+        name: 'https://replit.com/',
+        replaceMultipleFiles: 1,
+        refactor: 0.5,
+    },
+    {
+        name: 'https://glitch.com/',
+        replaceMultipleFiles: 0,
+
+    }
 ].map((x: any) => {
     const domain = new URL(x.name).hostname;
     x.url = x.name;

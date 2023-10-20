@@ -7,11 +7,15 @@ export interface IGithubStat {
     network_count: number;
     subscribers_count: number;
     pushed_at: string;
-}export interface IChoice extends IGithubStat {
+}
+
+
+export interface IChoice extends IGithubStat {
     name: string;
     npmPath: string;
     npmLastMonthDownloadCount: number;
     npmLastModifiedDateStr: string;
+    demoComponent: (props: any) => JSX.Element;
     [key: string]: any;
 }
 
